@@ -37,19 +37,20 @@ object HidService {
         val hidInformationChar = BluetoothGattCharacteristic(
             HID_INFORMATION_UUID,
             BluetoothGattCharacteristic.PROPERTY_READ,
-            BluetoothGattCharacteristic.PERMISSION_READ
+            BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED
         )
-        hidInformationChar.value = byteArrayOf(
-            0x01.toByte(), 0x01.toByte(), 0x00.toByte(), 0x03.toByte()
+        hidInformationChar.setValue(
+            byteArrayOf(0x01.toByte(), 0x01.toByte(), 0x00.toByte(), 0x03.toByte())
         ) // HID version 1.1, Country code 0, Flags 3
 
         // Characteristic: Report Map
         val reportMapChar = BluetoothGattCharacteristic(
             REPORT_MAP_UUID,
             BluetoothGattCharacteristic.PROPERTY_READ,
-            BluetoothGattCharacteristic.PERMISSION_READ
+            BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED
         )
-        reportMapChar.value = byteArrayOf(
+        reportMapChar.setValue(
+            byteArrayOf(
             0x05.toByte(), 0x01.toByte(), 0x09.toByte(), 0x06.toByte(), 0xA1.toByte(), 0x01.toByte(), 0x05.toByte(), 0x07.toByte(),
             0x19.toByte(), 0xE0.toByte(), 0x29.toByte(), 0xE7.toByte(), 0x15.toByte(), 0x00.toByte(), 0x25.toByte(), 0x01.toByte(),
             0x75.toByte(), 0x01.toByte(), 0x95.toByte(), 0x08.toByte(), 0x81.toByte(), 0x02.toByte(),
@@ -61,22 +62,23 @@ object HidService {
             0x25.toByte(), 0x65.toByte(), 0x05.toByte(), 0x07.toByte(), 0x19.toByte(), 0x00.toByte(),
             0x29.toByte(), 0x65.toByte(), 0x81.toByte(), 0x00.toByte(), 0xC0.toByte()
         )
+        )
 
 
         // Characteristic: Control Point
         val controlPointChar = BluetoothGattCharacteristic(
             CONTROL_POINT_UUID,
             BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE,
-            BluetoothGattCharacteristic.PERMISSION_WRITE
+            BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED
         )
 
         // Characteristic: Protocol Mode
         val protocolModeChar = BluetoothGattCharacteristic(
             PROTOCOL_MODE_UUID,
             BluetoothGattCharacteristic.PROPERTY_READ or BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE,
-            BluetoothGattCharacteristic.PERMISSION_READ or BluetoothGattCharacteristic.PERMISSION_WRITE
+            BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED or BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED
         )
-        protocolModeChar.value = byteArrayOf(0x01.toByte()) // Report Protocol mode
+        protocolModeChar.setValue(byteArrayOf(0x01.toByte())) // Report Protocol mode
 
         // Characteristic: Report (Input)
         reportCharacteristic = BluetoothGattCharacteristic(
@@ -84,15 +86,15 @@ object HidService {
             BluetoothGattCharacteristic.PROPERTY_READ or
                     BluetoothGattCharacteristic.PROPERTY_WRITE or
                     BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-            BluetoothGattCharacteristic.PERMISSION_READ or BluetoothGattCharacteristic.PERMISSION_WRITE
+            BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED or BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED
         )
 
         // Descriptor: Report Reference (for the input report)
         val reportRefDescriptor = BluetoothGattDescriptor(
             UUID.fromString("00002908-0000-1000-8000-00805f9b34fb"),
-            BluetoothGattDescriptor.PERMISSION_READ
+            BluetoothGattDescriptor.PERMISSION_READ_ENCRYPTED
         )
-        reportRefDescriptor.value = byteArrayOf(0x01.toByte(), 0x01.toByte()) // Report ID = 1, Input Report
+        reportRefDescriptor.setValue(byteArrayOf(0x01.toByte(), 0x01.toByte())) // Report ID = 1, Input Report
         reportCharacteristic.addDescriptor(reportRefDescriptor)
 
         // Add all to HID Service
@@ -108,7 +110,7 @@ object HidService {
 
     fun sendReport(report: ByteArray) {
         connectedDevice?.let {
-            reportCharacteristic.value = report
+            reportCharacteristic.setValue(report)
             gattServer?.notifyCharacteristicChanged(it, reportCharacteristic, false)
         }
     }
