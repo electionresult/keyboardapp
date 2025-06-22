@@ -15,6 +15,7 @@ import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.pm.PackageManager
+import jp.kshoji.blehid.util.BleUtils
 import android.widget.Toast
 
 class MainActivity : ComponentActivity() {
@@ -38,6 +39,10 @@ class MainActivity : ComponentActivity() {
             finish()
         }
 
+        if (!ensureBluetoothEnabled()) {
+            Toast.makeText(this, "Please enable Bluetooth", Toast.LENGTH_LONG).show()
+        }
+
         requestPermissions()
 
         setContent {
@@ -50,10 +55,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun checkBleSupport(): Boolean {
-        val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
-        val bluetoothAdapter = bluetoothManager.adapter
-        return bluetoothAdapter != null && packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE) &&
-                bluetoothAdapter.isMultipleAdvertisementSupported
+        return BleUtils.isBlePeripheralSupported(this)
     }
 
     private fun requestPermissions() {
@@ -68,6 +70,17 @@ class MainActivity : ComponentActivity() {
             viewModel.initialize()
         } else {
             permissionLauncher.launch(permissions)
+        }
+    }
+
+    private fun ensureBluetoothEnabled(): Boolean {
+        val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
+        val adapter = bluetoothManager.adapter ?: return false
+        return if (!adapter.isEnabled) {
+            BleUtils.enableBluetooth(this)
+            false
+        } else {
+            true
         }
     }
 
