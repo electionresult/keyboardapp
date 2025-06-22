@@ -579,7 +579,7 @@ public abstract class HidPeripheral {
                         }, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
 
                         // create bond
-                        if (ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_PRIVILEGED") == PackageManager.PERMISSION_GRANTED) {
+                        if (ContextCompat.checkSelfPermission(applicationContext, "android.permission.BLUETOOTH_PRIVILEGED") == PackageManager.PERMISSION_GRANTED) {
                             try {
                                 device.setPairingConfirmation(true);
                             } catch (final SecurityException e) {
