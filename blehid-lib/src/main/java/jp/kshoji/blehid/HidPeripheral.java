@@ -26,6 +26,8 @@ import android.os.ParcelUuid;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.Log;
+import android.content.pm.PackageManager;
+import androidx.core.content.ContextCompat;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -577,10 +579,12 @@ public abstract class HidPeripheral {
                         }, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
 
                         // create bond
-                        try {
-                            device.setPairingConfirmation(true);
-                        } catch (final SecurityException e) {
-                            Log.d(TAG, e.getMessage(), e);
+                        if (ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_PRIVILEGED") == PackageManager.PERMISSION_GRANTED) {
+                            try {
+                                device.setPairingConfirmation(true);
+                            } catch (final SecurityException e) {
+                                Log.d(TAG, e.getMessage(), e);
+                            }
                         }
                         device.createBond();
                     } else if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
