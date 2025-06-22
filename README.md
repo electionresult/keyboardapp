@@ -16,7 +16,8 @@ The generated APK can be found in `app/build/outputs/apk/debug/`.
 
 1. Install the generated APK on an Android device that supports BLE peripheral mode.
 2. Launch the app and grant the requested Bluetooth permissions.
-3. Enter text and press **Send** to transmit it as keyboard input to the connected device.
-4. Use **Scan Nearby Devices** to discover BLE devices around you.
+3. If prompted, enable Bluetooth so the device can advertise and pair.
+4. Enter text and press **Send** to transmit it as keyboard input to the connected device.
+5. Use **Scan Nearby Devices** to discover BLE devices around you.
 
 This repository also contains `blehid-lib`, a library used by the app to handle BLE HID operations.
