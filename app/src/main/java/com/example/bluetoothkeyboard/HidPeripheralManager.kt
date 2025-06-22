@@ -2,10 +2,14 @@ package com.example.bluetoothkeyboard
 
 import android.bluetooth.BluetoothDevice
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import jp.kshoji.blehid.KeyboardPeripheral
 
 class HidPeripheralManager(private val context: Context) {
     private var keyboardPeripheral: KeyboardPeripheral? = null
+    private val handler = Handler(Looper.getMainLooper())
 
     fun initialize(onConnectionChanged: (BluetoothDevice?, Boolean) -> Unit) {
         keyboardPeripheral = KeyboardPeripheral(context)
@@ -19,18 +23,28 @@ class HidPeripheralManager(private val context: Context) {
 
             override fun onKeyboardDisconnected(device: BluetoothDevice) {
                 onConnectionChanged(device, false)
+                // restart advertising after a short delay to allow reconnection
+                handler.postDelayed({ startAdvertising() }, 3000)
             }
         })
 
-        keyboardPeripheral?.startAdvertising()
+        startAdvertising()
     }
 
     fun startAdvertising() {
-        keyboardPeripheral?.startAdvertising()
+        try {
+            keyboardPeripheral?.startAdvertising()
+        } catch (e: Exception) {
+            Log.e("HID", "Failed to start advertising", e)
+        }
     }
 
     fun stopAdvertising() {
-        keyboardPeripheral?.stopAdvertising()
+        try {
+            keyboardPeripheral?.stopAdvertising()
+        } catch (e: Exception) {
+            Log.e("HID", "Failed to stop advertising", e)
+        }
     }
 
     fun sendKey(char: Char) {
