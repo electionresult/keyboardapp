@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    namespace 'com.kshoji.blehid' // ✅ Add this line
+    namespace 'jp.kshoji.blehid'
 
     compileSdkVersion 35
 
