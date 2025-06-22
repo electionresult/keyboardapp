@@ -20,13 +20,15 @@ public final class KeyboardPeripheral extends HidPeripheral {
         this.keyboardConnectionCallback = callback;
     }
 
-    public void handleDeviceConnected(BluetoothDevice device) {
+    @Override
+    protected void onDeviceConnected(BluetoothDevice device) {
         if (keyboardConnectionCallback != null) {
             keyboardConnectionCallback.onKeyboardConnected(device);
         }
     }
 
-    public void handleDeviceDisconnected(BluetoothDevice device) {
+    @Override
+    protected void onDeviceDisconnected(BluetoothDevice device) {
         if (keyboardConnectionCallback != null) {
             keyboardConnectionCallback.onKeyboardDisconnected(device);
         }

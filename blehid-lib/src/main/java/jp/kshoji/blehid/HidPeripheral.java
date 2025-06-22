@@ -596,6 +596,7 @@ public abstract class HidPeripheral {
                             bluetoothDevicesMap.put(device.getAddress(), device);
                         }
                     }
+                    onDeviceConnected(device);
                     break;
 
                 case BluetoothProfile.STATE_DISCONNECTED:
@@ -615,6 +616,7 @@ public abstract class HidPeripheral {
                     synchronized (bluetoothDevicesMap) {
                         bluetoothDevicesMap.remove(deviceAddress);
                     }
+                    onDeviceDisconnected(device);
                     break;
 
                 default:
@@ -806,5 +808,23 @@ public abstract class HidPeripheral {
         } else {
             serialNumber = newSerialNumber;
         }
+    }
+
+    /**
+     * Called when a central device is connected. Subclasses may override.
+     *
+     * @param device the connected device
+     */
+    protected void onDeviceConnected(@NonNull BluetoothDevice device) {
+        // default no-op
+    }
+
+    /**
+     * Called when a central device is disconnected. Subclasses may override.
+     *
+     * @param device the disconnected device
+     */
+    protected void onDeviceDisconnected(@NonNull BluetoothDevice device) {
+        // default no-op
     }
 }
