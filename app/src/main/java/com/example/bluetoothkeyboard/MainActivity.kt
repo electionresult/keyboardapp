@@ -4,13 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.bluetoothkeyboard.ui.theme.BluetoothKeyboardTheme
 
 import android.Manifest
@@ -18,18 +16,12 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.pm.PackageManager
 import android.widget.Toast
-import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 
 class MainActivity : ComponentActivity() {
 
     private val viewModel: BleViewModel by viewModels()
+    private val permissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +56,7 @@ class MainActivity : ComponentActivity() {
             Manifest.permission.BLUETOOTH_ADVERTISE,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
-        ActivityCompat.requestPermissions(this, permissions, 1)
+        permissionLauncher.launch(permissions)
     }
 
 }
