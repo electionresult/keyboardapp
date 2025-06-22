@@ -42,7 +42,8 @@ class BleViewModel(app: Application) : AndroidViewModel(app) {
                 else "Not connected"
             )
         }
-        hidManager.startAdvertising()
+        // Advertising is started inside HidPeripheralManager.initialize()
+        // hidManager.startAdvertising()
     }
 
     fun sendTextAsKeyboard(text: String, delayMs: Long) {
