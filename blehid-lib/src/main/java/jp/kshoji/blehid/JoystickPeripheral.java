@@ -21,7 +21,7 @@ public class JoystickPeripheral extends HidPeripheral {
             USAGE_MAXIMUM(1),   0x03,
             LOGICAL_MINIMUM(1), 0x00,
             LOGICAL_MAXIMUM(1), 0x01,
-            REPORT_COUNT(1),    0x03,         //   2 bits (Buttons)
+            REPORT_COUNT(1),    0x03,         //   3 bits (Buttons)
             REPORT_SIZE(1),     0x01,
             INPUT(1),           0x02,         //   Data, Variable, Absolute
             REPORT_COUNT(1),    0x01,         //   6 bits (Padding)
