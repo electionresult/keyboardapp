@@ -91,6 +91,9 @@ public final class BleUuidUtils {
      * @return true if the UUID is short style
      */
     private static boolean isShortUuid(@NonNull final UUID src) {
-        return (src.getMostSignificantBits() & 0xffff0000ffffffffL) == 0L && src.getLeastSignificantBits() == 0L;
+        // A short UUID follows the Bluetooth base UUID format
+        // 0000XXXX-0000-1000-8000-00805F9B34FB where XXXX is the 16-bit value
+        return src.getLeastSignificantBits() == 0x800000805F9B34FBL
+                && (src.getMostSignificantBits() & 0xffff0000ffffffffL) == 0x00001000L;
     }
 }
