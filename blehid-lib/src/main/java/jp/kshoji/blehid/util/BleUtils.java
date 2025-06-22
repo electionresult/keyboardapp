@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 public class BleUtils {
 
     /**
-     * Check if Bluetooth LE device supported on the running environment.
+     * Check if Bluetooth LE device is supported on the running environment.
      *
      * @param context the context
      * @return true if supported
