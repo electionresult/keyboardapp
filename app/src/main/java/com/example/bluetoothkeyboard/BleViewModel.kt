@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 class BleViewModel(app: Application) : AndroidViewModel(app) {
     private val context = app.applicationContext
     private val hidManager = HidPeripheralManager(context)
+    private var initialized = false
     private var scanner: BluetoothLeScanner? = null
     private val discoveredDevices = mutableSetOf<BluetoothDevice>()
     private val scanCallback = object : ScanCallback() {
@@ -32,7 +33,9 @@ class BleViewModel(app: Application) : AndroidViewModel(app) {
     private val _nearbyDevices = MutableLiveData<List<BluetoothDevice>>(emptyList())
     val nearbyDevices: LiveData<List<BluetoothDevice>> = _nearbyDevices
 
-    init {
+    fun initialize() {
+        if (initialized) return
+        initialized = true
         hidManager.initialize { device: BluetoothDevice?, connected: Boolean ->
             _connectedDeviceName.postValue(
                 if (connected) "Connected: ${device?.name ?: "Unknown"}"
@@ -68,6 +71,8 @@ class BleViewModel(app: Application) : AndroidViewModel(app) {
     override fun onCleared() {
         super.onCleared()
         scanner?.stopScan(scanCallback)
-        hidManager.stopAdvertising()
+        if (initialized) {
+            hidManager.stopAdvertising()
+        }
     }
 }

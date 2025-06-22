@@ -21,7 +21,14 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: BleViewModel by viewModels()
     private val permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { }
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
+            val granted = results.all { it.value }
+            if (granted) {
+                viewModel.initialize()
+            } else {
+                Toast.makeText(this, "Bluetooth permissions denied", Toast.LENGTH_LONG).show()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +63,12 @@ class MainActivity : ComponentActivity() {
             Manifest.permission.BLUETOOTH_ADVERTISE,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
-        permissionLauncher.launch(permissions)
+        val allGranted = permissions.all { checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }
+        if (allGranted) {
+            viewModel.initialize()
+        } else {
+            permissionLauncher.launch(permissions)
+        }
     }
 
 }
